@@ -1,0 +1,22 @@
+{
+    "name": "jonathanbossenger/php-ai-sdk-demo",
+    "description": "A demo plugin to showcase the integration of the PHP AI SDK.",
+    "type": "wordpress-plugin",
+    "license": "GPL-2.0-or-later",
+    "authors": [
+        {
+            "name": "Jonathan Bossenger",
+            "email": "jonathanbossenger@gmail.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {
+        "wordpress/php-ai-client": "^0.3.1",
+        "guzzlehttp/guzzle": "^7.10"
+    },
+    "config": {
+        "allow-plugins": {
+            "php-http/discovery": true
+        }
+    }
+}
