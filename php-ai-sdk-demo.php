@@ -4,7 +4,7 @@
  * Description: A demo plugin to showcase the integration of the PHP AI SDK.
  * Version: 1.0.0
  * Author: Jonathan Bossenger
- * Plugin URI: https://github.com/jonathanbossenger/wp-ai-sdk-demo
+ * Plugin URI: https://github.com/jonathanbossenger/php-ai-sdk-demo
  */
 
 // Exit if accessed directly.
@@ -23,29 +23,30 @@ if ( file_exists( dirname( __FILE__ ) . '/vendor/autoload.php' ) ) {
 	wp_die( 'Please run "composer install" in the plugin directory to install the required dependencies.' );
 }
 
-use WordPress\AiClient\AiClient;
-use WordPress\AiClient\Providers\ProviderRegistry;
-use WordPress\AiClient\ProviderImplementations\Anthropic\AnthropicProvider;
-
-// Initialize the registry and register providers
-function php_ai_sdk_demo_init_registry() {
-	$registry = new ProviderRegistry();
-	$registry->registerProvider(AnthropicProvider::class);
-	return $registry;
+add_action( 'init', 'php_ai_sdk_demo_init' );
+/**
+ * Plugin initialization function. Initializes the AI provider registry.
+ *
+ * @return void
+ */
+function php_ai_sdk_demo_init() {
+	$registry = new WordPress\AiClient\Providers\ProviderRegistry();
+	$registry->registerProvider(WordPress\AiClient\ProviderImplementations\Anthropic\AnthropicProvider::class);
 }
-
+/**
+ * Generate text using the PHP AI SDK with the Anthropic provider.
+ *
+ * @param $prompt
+ *
+ * @return string
+ */
 function php_ai_sdk_demo_generate_text( $prompt ) {
 	try {
-		// Initialize registry with Anthropic provider
-		$registry = php_ai_sdk_demo_init_registry();
-
-		// Generate text using the registry
-		$text = AiClient::prompt( $prompt )
-		                ->usingProvider('anthropic')
-		                ->generateText();
-
-		return $text;
+		$result =  WordPress\AiClient\AiClient::prompt( $prompt )
+		               ->usingProvider('anthropic')
+		               ->generateText();
 	} catch (Exception $e) {
-		return 'Error: ' . $e->getMessage();
+		$result = 'Error: ' . $e->getMessage();
 	}
+	return $result;
 }
