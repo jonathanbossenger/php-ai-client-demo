@@ -5,6 +5,8 @@
  * Version: 1.0.0
  * Author: Jonathan Bossenger
  * Plugin URI: https://github.com/jonathanbossenger/php-ai-sdk-demo
+ *
+ * @package php-ai-sdk-demo
  */
 
 // Exit if accessed directly.
@@ -17,8 +19,8 @@ if ( ! defined( 'ANTHROPIC_API_KEY' ) ) {
 }
 
 // Include the Composer autoloader.
-if ( file_exists( dirname( __FILE__ ) . '/vendor/autoload.php' ) ) {
-	require_once dirname( __FILE__ ) . '/vendor/autoload.php';
+if ( file_exists( __DIR__ . '/vendor/autoload.php' ) ) {
+	require_once __DIR__ . '/vendor/autoload.php';
 } else {
 	wp_die( 'Please run "composer install" in the plugin directory to install the required dependencies.' );
 }
@@ -31,21 +33,21 @@ add_action( 'init', 'php_ai_sdk_demo_init' );
  */
 function php_ai_sdk_demo_init() {
 	$registry = new WordPress\AiClient\Providers\ProviderRegistry();
-	$registry->registerProvider(WordPress\AiClient\ProviderImplementations\Anthropic\AnthropicProvider::class);
+	$registry->registerProvider( WordPress\AiClient\ProviderImplementations\Anthropic\AnthropicProvider::class );
 }
 /**
  * Generate text using the PHP AI SDK with the Anthropic provider.
  *
- * @param $prompt
+ * @param string $prompt The prompt to generate text from.
  *
  * @return string
  */
 function php_ai_sdk_demo_generate_text( $prompt ) {
 	try {
-		$result =  WordPress\AiClient\AiClient::prompt( $prompt )
-		               ->usingProvider('anthropic')
-		               ->generateText();
-	} catch (Exception $e) {
+		$result = WordPress\AiClient\AiClient::prompt( $prompt )
+						->usingProvider( 'anthropic' )
+						->generateText();
+	} catch ( Exception $e ) {
 		$result = 'Error: ' . $e->getMessage();
 	}
 	return $result;
