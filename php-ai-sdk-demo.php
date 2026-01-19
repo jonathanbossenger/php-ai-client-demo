@@ -55,8 +55,19 @@ function php_ai_sdk_demo_generate_text( $prompt ) {
 }
 
 if ( defined( 'WP_CLI' ) && WP_CLI ) {
-	WP_CLI::add_command( 'php-ai-sdk-demo-text', function () {
-		WP_CLI::line( php_ai_sdk_demo_generate_text( 'Write a short poem about WordPress plugins.' ) );
-	} );
+	WP_CLI::add_command(
+		'php-ai-sdk-demo-text',
+		function ( $args ) {
+			if ( empty( $args[0] ) ) {
+				WP_CLI::error( 'Please provide a prompt.' );
+
+				return;
+			}
+			WP_CLI::line( php_ai_sdk_demo_generate_text( 'Write a short poem about WordPress plugins.' ) );
+		},
+		array(
+			'shortdesc' => 'Generate text using the PHP AI SDK with the Anthropic provider. Usage: wp php-ai-sdk-demo-text "Your prompt here"',
+		)
+	);
 }
 

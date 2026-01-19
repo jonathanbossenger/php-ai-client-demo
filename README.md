@@ -61,10 +61,10 @@ echo $generated_text;
 You can also use the WP-CLI command to generate text:
 
 ```bash
-wp php-ai-sdk-demo-text
+wp php-ai-sdk-demo-text "Write a short introduction about WordPress"
 ```
 
-This will output generated text based on the following prompt: "Write a short poem about WordPress plugins."
+This will output generated text based on the prompt.
 
 ## License
 
