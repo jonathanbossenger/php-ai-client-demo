@@ -46,9 +46,17 @@ function php_ai_sdk_demo_generate_text( $prompt ) {
 	try {
 		$result = WordPress\AiClient\AiClient::prompt( $prompt )
 						->usingProvider( 'anthropic' )
+
 						->generateText();
 	} catch ( Exception $e ) {
 		$result = 'Error: ' . $e->getMessage();
 	}
 	return $result;
 }
+
+if ( defined( 'WP_CLI' ) && WP_CLI ) {
+	WP_CLI::add_command( 'php-ai-sdk-demo-text', function () {
+		WP_CLI::line( php_ai_sdk_demo_generate_text( 'Write a short poem about WordPress plugins.' ) );
+	} );
+}
+
