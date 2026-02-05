@@ -14,10 +14,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-if ( ! defined( 'ANTHROPIC_API_KEY' ) ) {
-	wp_die( 'Please define the ANTHROPIC_API_KEY constant in your wp-config.php file.' );
-}
-
 // Include the Composer autoloader.
 if ( file_exists( __DIR__ . '/vendor/autoload.php' ) ) {
 	require_once __DIR__ . '/vendor/autoload.php';
@@ -25,16 +21,6 @@ if ( file_exists( __DIR__ . '/vendor/autoload.php' ) ) {
 	wp_die( 'Please run "composer install" in the plugin directory to install the required dependencies.' );
 }
 
-add_action( 'init', 'php_ai_sdk_demo_init' );
-/**
- * Plugin initialization function. Initializes the AI provider registry.
- *
- * @return void
- */
-function php_ai_sdk_demo_init() {
-	$registry = new WordPress\AiClient\Providers\ProviderRegistry();
-	$registry->registerProvider( WordPress\AiClient\ProviderImplementations\Anthropic\AnthropicProvider::class );
-}
 /**
  * Generate text using the PHP AI SDK with the Anthropic provider.
  *
@@ -43,10 +29,17 @@ function php_ai_sdk_demo_init() {
  * @return string
  */
 function php_ai_sdk_demo_generate_text( $prompt ) {
+
+	/**
+	 * Set custom request options for the AI Client. This is optional, but demonstrates how to customize the request.
+	 */
+	$options = new \WordPress\AiClient\Providers\Http\DTO\RequestOptions();
+	$options->setTimeout(60.0);
+	$options->setConnectTimeout(10.0);
+
 	try {
 		$result = WordPress\AiClient\AiClient::prompt( $prompt )
-						->usingProvider( 'anthropic' )
-
+						->usingRequestOptions( $options )
 						->generateText();
 	} catch ( Exception $e ) {
 		$result = 'Error: ' . $e->getMessage();
@@ -60,8 +53,6 @@ if ( defined( 'WP_CLI' ) && WP_CLI ) {
 		function ( $args ) {
 			if ( empty( $args[0] ) ) {
 				WP_CLI::error( 'Please provide a prompt.' );
-
-				return;
 			}
 			WP_CLI::line( php_ai_sdk_demo_generate_text( 'Write a short poem about WordPress plugins.' ) );
 		},
