@@ -4,21 +4,22 @@ A simple demonstration plugin showcasing the integration of the PHP AI Client li
 
 ## Description
 
-PHP AI Client Demo is a lightweight example plugin that demonstrates the basics of integrating AI text generation into WordPress using the PHP AI Client library with Anthropic's Claude AI.
+PHP AI Client Demo is a lightweight example plugin that demonstrates the basics of integrating AI text generation into WordPress using the PHP AI Client library. The plugin works with any supported AI provider including Anthropic Claude, OpenAI, and local AI models.
 
 ## Features
 
 - **Simple AI Integration**: Minimal setup to get AI text generation working in WordPress
-- **Anthropic Provider**: Demonstrates using Claude AI for text generation
-- **Provider Registry**: Shows how to register and configure AI providers
+- **Multi-Provider Support**: Works with any AI provider supported by the PHP AI Client library
+- **Custom Request Options**: Demonstrates configuring timeouts for local and remote AI models
 - **Reusable Function**: Easy-to-use helper function for generating text
+- **WP-CLI Integration**: Generate text from the command line
 
 ## Requirements
 
 - WordPress 6.0 or higher
 - PHP 8.0 or higher
 - Composer
-- Anthropic API key
+- API key for your chosen AI provider (or access to a local AI model)
 
 ## Installation
 
@@ -34,9 +35,21 @@ cd php-ai-client-demo
 composer install
 ```
 
-3. Add your Anthropic API key to your `wp-config.php` file:
+3. Configure your AI provider credentials in your `wp-config.php` file. The PHP AI Client library automatically detects provider-specific constants:
+
+For Anthropic Claude:
 ```php
 define( 'ANTHROPIC_API_KEY', 'your-api-key-here' );
+```
+
+For OpenAI:
+```php
+define( 'OPENAI_API_KEY', 'your-api-key-here' );
+```
+
+For Google Gemini:
+```php
+define( 'GOOGLE_API_KEY', 'your-api-key-here' );
 ```
 
 4. Activate the plugin through the WordPress admin interface or via WP-CLI:
