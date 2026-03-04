@@ -14,11 +14,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-// Include the Composer autoloader.
-if ( file_exists( __DIR__ . '/vendor/autoload.php' ) ) {
-	require_once __DIR__ . '/vendor/autoload.php';
-} else {
-	wp_die( 'Please run "composer install" in the plugin directory to install the required dependencies.' );
+// Check if WordPress version is greater than or equal to 7.0, and if so, skip the autoloader.
+if ( ! version_compare( get_bloginfo( 'version' ), '7.0', '<=' ) ) {
+	// Include the Composer autoloader.
+	if ( file_exists( __DIR__ . '/vendor/autoload.php' ) ) {
+		require_once __DIR__ . '/vendor/autoload.php';
+	} else {
+		wp_die( 'Please run "composer install" in the plugin directory to install the required dependencies.' );
+	}
 }
 
 /**
@@ -34,16 +37,19 @@ function php_ai_sdk_demo_generate_text( $prompt ) {
 	 * Set custom request options for the AI Client. This is optional, but demonstrates how to customize the request.
 	 */
 	$options = new \WordPress\AiClient\Providers\Http\DTO\RequestOptions();
-	$options->setTimeout(60.0);
-	$options->setConnectTimeout(10.0);
+	$options->setTimeout( 60.0 );
+	$options->setConnectTimeout( 10.0 );
 
-	try {
-		$result = WordPress\AiClient\AiClient::prompt( $prompt )
-						->usingRequestOptions( $options )
-						->generateText();
-	} catch ( Exception $e ) {
-		$result = 'Error: ' . $e->getMessage();
+	if ( function_exists( 'wp_ai_client_prompt' ) ) { // WordPress 7.0 helper function for AI Client.
+		$result = wp_ai_client_prompt( $prompt )
+			->using_request_options( $options )
+			->generate_text();
+	} else {
+		$result = \WordPress\AiClient\AiClient::prompt( $prompt )
+												->usingRequestOptions( $options )
+												->generateText();
 	}
+
 	return $result;
 }
 
@@ -61,4 +67,3 @@ if ( defined( 'WP_CLI' ) && WP_CLI ) {
 		)
 	);
 }
-
