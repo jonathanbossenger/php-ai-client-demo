@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 // Check if WordPress version is greater than or equal to 7.0, and if so, skip the autoloader.
-if ( ! version_compare( get_bloginfo( 'version' ), '7.0', '<=' ) ) {
+if ( ! isset( $wp_version ) || version_compare( $wp_version, '7.0-alpha', '<' ) ) {
 	// Include the Composer autoloader.
 	if ( file_exists( __DIR__ . '/vendor/autoload.php' ) ) {
 		require_once __DIR__ . '/vendor/autoload.php';
